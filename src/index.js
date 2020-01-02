@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import axios from "axios";
 
 import TodoItem from "./todo-item"
 import "./styles.css"
@@ -27,7 +28,21 @@ class App extends React.Component {
 
     addTodo = e => {
         e.preventDefault()
-        console.log(this.state.todo)
+        axios({
+            method: "post",
+            url: "http://localhost:5000/todo",
+            headers: { "content-type": "application/json"},
+            data: {
+                title: this.state.todo, 
+                done: false
+            }
+        }).then(res => {
+            this.setState({
+                todos: [...this.state.todos, res.data],
+                todo: ""
+            })
+        })
+        .catch(error => console.log("Add todo Error: ", error))
     }
 
     handleChange = e => {
