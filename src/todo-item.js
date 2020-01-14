@@ -1,48 +1,29 @@
-import React, { Component } from "react"
+import React, { useState } from "react";
 
-class TodoItem extends React.Component {
-    constructor(props) {
-        super(props)
+function TodoItem(props) {
+  const [done, setDone] = useState(props.item.done);
 
-        this.state = {
-            done: props.item.done
-        }
-    }
+  const toggleDone = () => {
+    fetch(`https://bac-todo-api.herokuapp.com/todo/${props.item.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        done: !done
+      })
+    })
+      .then(setDone(!done))
+      .catch((error) => console.log("toggleDone Error: ", error));
+  };
 
-    toggleDone = () => {
-        fetch(`http://localhost:5000/todo/${this.props.item.id}`, {
-            method: "PATCH",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                done: !this.state.done
-            })
-        })
-        .then(
-            this.setState({
-
-            })
-        )
-        .catch(error => console.log("toggleDone Error: ", error))
-    }
-
-    render() {
-        console.log(this.props)
-        return(
-            <div className="todo-item">
-                <div className="todo-item">
-                    <input
-                        type="checkbox" 
-                        defaultChecked={this.state.done}
-                        onClick={this.toggleDone}
-                    />
-                    <p className={this.state.done}>
-                        {this.props.item.title}
-                    </p>
-                    <button onClick={() => this.props.deleteItem(this.props.item.id)}>X</button>
-                </div>
-            </div>
-        )
-    }
+  return (
+    <div className="todo-item">
+      <div className="todo-item">
+        <input type="checkbox" defaultChecked={done} onClick={toggleDone} />
+        <p className={done ? "done" : null}>{props.item.title}</p>
+        <button onClick={() => props.deleteItem(props.item.id)}>X</button>
+      </div>
+    </div>
+  );
 }
 
-export default TodoItem
+export default TodoItem;
