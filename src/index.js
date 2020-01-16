@@ -10,7 +10,7 @@ function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    fetch("https://bac-todo-api.herokuapp.com/todos")
+    fetch("https://bac-todo-express-api.herokuapp.com/todos")
       .then((response) => response.json())
       .then((data) => {
         setTodos(data);
@@ -20,7 +20,7 @@ function App() {
   const addTodo = (e) => {
     e.preventDefault();
     axios
-      .post("https://bac-todo-api.herokuapp.com/todo", {
+      .post("https://bac-todo-express-api.herokuapp.com/todo", {
         title: todo,
         done: false
       })
@@ -33,18 +33,18 @@ function App() {
 
   const renderTodos = () => {
     return todos.map((item) => {
-      return <TodoItem key={item.id} item={item} deleteItem={deleteItem} />;
+      return <TodoItem key={item._id} item={item} deleteItem={deleteItem} />;
     });
   };
 
   const deleteItem = (id) => {
-    fetch(`https://bac-todo-api.herokuapp.com/todo/${id}`, {
+    fetch(`https://bac-todo-express-api.herokuapp.com/todo/${id}`, {
       method: "DELETE"
     })
       .then(
         setTodos(
           todos.filter((item) => {
-            return item.id !== id;
+            return item._id !== id;
           })
         )
       )
